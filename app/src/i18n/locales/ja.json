@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "VTuber観光ガイド"
+  },
+  "home": {
+    "subtitle": "京都の観光スポット"
+  },
+  "spotDetail": {
+    "back": "← 戻る",
+    "notFound": "スポットが見つかりませんでした",
+    "duration": "所要時間: 約{{minutes}}分",
+    "overview": "概要",
+    "location": "位置情報",
+    "latitude": "緯度",
+    "longitude": "経度",
+    "address": "住所・アクセス",
+    "businessHours": "営業時間",
+    "admission": "料金",
+    "highlights": "おすすめポイント"
+  },
+  "audioGuide": {
+    "title": "音声ガイド",
+    "playing": "再生中...",
+    "paused": "一時停止",
+    "completed": "再生完了",
+    "hasAudioGuide": "音声ガイドあり"
+  },
+  "settings": {
+    "title": "設定",
+    "back": "← 戻る",
+    "general": "一般",
+    "language": "言語設定",
+    "model": "モデル選択",
+    "modelSubtitle": "Haru (デフォルト)",
+    "info": "情報",
+    "about": "このアプリについて",
+    "footer": "Prototype Build"
+  },
+  "category": {
+    "temple": "寺院",
+    "shrine": "神社",
+    "museum": "博物館",
+    "nature": "自然",
+    "food": "グルメ",
+    "shopping": "ショッピング",
+    "landmark": "ランドマーク"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文"
+  },
+  "duration": {
+    "minutes": "{{count}}分"
+  }
+}

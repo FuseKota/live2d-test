@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "VTuber Tour Guide"
+  },
+  "home": {
+    "subtitle": "Kyoto Sightseeing Spots"
+  },
+  "spotDetail": {
+    "back": "← Back",
+    "notFound": "Spot not found",
+    "duration": "Duration: ~{{minutes}} min",
+    "overview": "Overview",
+    "location": "Location",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "address": "Address & Access",
+    "businessHours": "Business Hours",
+    "admission": "Admission",
+    "highlights": "Highlights"
+  },
+  "audioGuide": {
+    "title": "Audio Guide",
+    "playing": "Playing...",
+    "paused": "Paused",
+    "completed": "Playback Complete",
+    "hasAudioGuide": "Audio Guide Available"
+  },
+  "settings": {
+    "title": "Settings",
+    "back": "← Back",
+    "general": "General",
+    "language": "Language",
+    "model": "Model Selection",
+    "modelSubtitle": "Haru (Default)",
+    "info": "Information",
+    "about": "About This App",
+    "footer": "Prototype Build"
+  },
+  "category": {
+    "temple": "Temple",
+    "shrine": "Shrine",
+    "museum": "Museum",
+    "nature": "Nature",
+    "food": "Food",
+    "shopping": "Shopping",
+    "landmark": "Landmark"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文"
+  },
+  "duration": {
+    "minutes": "{{count}} min"
+  }
+}

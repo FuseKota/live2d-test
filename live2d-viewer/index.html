@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Live2D Viewer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+      #canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script>
+      // Safety net: track whether READY was sent by the module
+      window.__readySent = false;
+      window.__cubismCoreLoaded = false;
+
+      // Global error handler
+      window.onerror = function(msg, url, line, col, error) {
+        console.error('[Live2D Viewer] Global error:', msg);
+      };
+    </script>
+    <!-- Cubism Core SDK: MUST load before pixi-live2d-display -->
+    <script
+      src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"
+      onload="window.__cubismCoreLoaded = true; console.log('[Cubism Core] Loaded');"
+      onerror="console.error('[Cubism Core] CDN load failed'); window.__cubismCoreLoaded = false;"
+    ></script>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script type="module" src="/src/main.ts"></script>
+    <!-- Safety net: if module fails to load/execute, send READY after timeout -->
+    <script>
+      setTimeout(function() {
+        if (!window.__readySent && window.ReactNativeWebView) {
+          console.warn('[Live2D Viewer] Safety net: sending fallback READY');
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            id: 'evt_fallback_ready',
+            timestamp: Date.now(),
+            event: { type: 'READY' }
+          }));
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            id: 'evt_fallback_error',
+            timestamp: Date.now(),
+            event: { type: 'MODEL_ERROR', payload: { error: 'Module script failed to execute' } }
+          }));
+        }
+      }, 5000);
+    </script>
+  </body>
+</html>

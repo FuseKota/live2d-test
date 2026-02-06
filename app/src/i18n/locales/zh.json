@@ -1,0 +1,56 @@
+{
+  "app": {
+    "name": "VTuber观光导游"
+  },
+  "home": {
+    "subtitle": "京都观光景点"
+  },
+  "spotDetail": {
+    "back": "← 返回",
+    "notFound": "未找到景点",
+    "duration": "所需时间: 约{{minutes}}分钟",
+    "overview": "概述",
+    "location": "位置信息",
+    "latitude": "纬度",
+    "longitude": "经度",
+    "address": "地址・交通",
+    "businessHours": "营业时间",
+    "admission": "门票",
+    "highlights": "推荐亮点"
+  },
+  "audioGuide": {
+    "title": "语音导览",
+    "playing": "播放中...",
+    "paused": "已暂停",
+    "completed": "播放完成",
+    "hasAudioGuide": "有语音导览"
+  },
+  "settings": {
+    "title": "设置",
+    "back": "← 返回",
+    "general": "通用",
+    "language": "语言设置",
+    "model": "模型选择",
+    "modelSubtitle": "Haru (默认)",
+    "info": "信息",
+    "about": "关于本应用",
+    "footer": "原型版本"
+  },
+  "category": {
+    "temple": "寺院",
+    "shrine": "神社",
+    "museum": "博物馆",
+    "nature": "自然",
+    "food": "美食",
+    "shopping": "购物",
+    "landmark": "地标"
+  },
+  "language": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文"
+  },
+  "duration": {
+    "minutes": "{{count}}分钟"
+  }
+}
