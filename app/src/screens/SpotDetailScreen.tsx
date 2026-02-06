@@ -171,6 +171,8 @@ const SpotDetailScreen: React.FC = () => {
             <View style={styles.section}>
               <AudioGuidePlayer
                 audioUrl={spot.audioGuideUrl}
+                ttsText={spot.subtitles ? getLocalizedText(spot.subtitles, language) : undefined}
+                lang={language}
                 onComplete={handleAudioComplete}
                 onPlayStateChange={handlePlayStateChange}
               />

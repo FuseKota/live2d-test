@@ -9,6 +9,7 @@
 import { PIXI } from './setup';
 import { ModelManager } from './model-manager';
 import { LipSyncController } from './lip-sync';
+import { TTSController } from './tts-controller';
 import { initBridge, sendEvent } from './bridge';
 import { LIVE2D_CONFIG } from './types';
 
@@ -63,8 +64,11 @@ async function main(): Promise<void> {
   // LipSyncController 初期化
   const lipSyncController = new LipSyncController(modelManager);
 
+  // TTSController 初期化
+  const ttsController = new TTSController(lipSyncController);
+
   // ブリッジ初期化
-  initBridge(modelManager, lipSyncController);
+  initBridge(modelManager, lipSyncController, ttsController);
 
   // ウィンドウリサイズハンドリング
   const handleResize = () => {

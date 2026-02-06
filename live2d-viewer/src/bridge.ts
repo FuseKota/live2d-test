@@ -11,6 +11,7 @@ import type {
 } from './types';
 import type { ModelManager } from './model-manager';
 import type { LipSyncController } from './lip-sync';
+import type { TTSController } from './tts-controller';
 
 // グローバル拡張
 declare global {
@@ -49,12 +50,13 @@ export function sendEvent(event: WebViewEvent): void {
  */
 export function initBridge(
   modelManager: ModelManager,
-  lipSyncController: LipSyncController
+  lipSyncController: LipSyncController,
+  ttsController: TTSController
 ): void {
   // コマンドディスパッチャをグローバルに登録
   window.dispatchRNCommand = (command: WebViewCommand) => {
     console.log('[Bridge] received command:', command.type);
-    handleCommand(command, modelManager, lipSyncController);
+    handleCommand(command, modelManager, lipSyncController, ttsController);
   };
 
   console.log('[Bridge] initialized');
@@ -66,7 +68,8 @@ export function initBridge(
 async function handleCommand(
   command: WebViewCommand,
   modelManager: ModelManager,
-  lipSyncController: LipSyncController
+  lipSyncController: LipSyncController,
+  ttsController: TTSController
 ): Promise<void> {
   try {
     switch (command.type) {
@@ -141,6 +144,17 @@ async function handleCommand(
 
       case 'STOP_LIP_SYNC': {
         lipSyncController.stopLipSync();
+        break;
+      }
+
+      case 'START_TTS': {
+        const { text, lang } = command.payload;
+        ttsController.speak(text, lang);
+        break;
+      }
+
+      case 'STOP_TTS': {
+        ttsController.stop();
         break;
       }
 

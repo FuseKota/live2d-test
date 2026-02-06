@@ -12,15 +12,31 @@ import { AUDIO_CONFIG } from '../constants/config';
 interface AudioGuidePlayerProps {
   audioUrl: string;
   duration?: number;
+  ttsText?: string;
+  lang?: string;
   onComplete?: () => void;
   onPlayStateChange?: (isPlaying: boolean) => void;
 }
 
 type PlaybackState = 'idle' | 'playing' | 'paused' | 'completed';
 
+/** 言語別の推定読み上げ速度（文字/秒） */
+const CHARS_PER_SECOND: Record<string, number> = {
+  ja: 5,
+  en: 15,
+  zh: 4,
+};
+
+function estimateTTSDuration(text: string, lang: string): number {
+  const cps = CHARS_PER_SECOND[lang] || 10;
+  return Math.max(1, Math.ceil(text.length / cps));
+}
+
 const AudioGuidePlayer: React.FC<AudioGuidePlayerProps> = ({
   audioUrl,
-  duration = AUDIO_CONFIG.PLACEHOLDER_DURATION,
+  duration: durationProp = AUDIO_CONFIG.PLACEHOLDER_DURATION,
+  ttsText,
+  lang = 'ja',
   onComplete,
   onPlayStateChange,
 }) => {
@@ -30,6 +46,8 @@ const AudioGuidePlayer: React.FC<AudioGuidePlayerProps> = ({
   const [progress, setProgress] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const elapsedRef = useRef(0);
+  const useTTS = !!ttsText;
+  const duration = useTTS ? estimateTTSDuration(ttsText!, lang) : durationProp;
 
   const clearTimer = useCallback(() => {
     if (timerRef.current) {
@@ -42,13 +60,17 @@ const AudioGuidePlayer: React.FC<AudioGuidePlayerProps> = ({
     try {
       setPlaybackState('completed');
       setProgress(1);
-      bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      if (useTTS) {
+        bridge.sendCommand({ type: 'STOP_TTS' });
+      } else {
+        bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      }
       onPlayStateChange?.(false);
       onComplete?.();
     } finally {
       clearTimer();
     }
-  }, [clearTimer, bridge, onComplete, onPlayStateChange]);
+  }, [clearTimer, bridge, useTTS, onComplete, onPlayStateChange]);
 
   const startPlayback = useCallback(() => {
     const totalMs = duration * 1000;
@@ -65,36 +87,48 @@ const AudioGuidePlayer: React.FC<AudioGuidePlayerProps> = ({
     }, intervalMs);
   }, [duration, handleComplete]);
 
+  const sendStartCommand = useCallback(() => {
+    if (useTTS) {
+      bridge.sendCommand({
+        type: 'START_TTS',
+        payload: { text: ttsText!, lang },
+      });
+    } else {
+      bridge.sendCommand({
+        type: 'START_LIP_SYNC',
+        payload: { audioUrl, duration },
+      });
+    }
+  }, [useTTS, bridge, ttsText, lang, audioUrl, duration]);
+
   const handlePlay = useCallback(() => {
     if (playbackState === 'idle' || playbackState === 'completed') {
       elapsedRef.current = 0;
       setProgress(0);
       setPlaybackState('playing');
       onPlayStateChange?.(true);
-      bridge.sendCommand({
-        type: 'START_LIP_SYNC',
-        payload: { audioUrl, duration },
-      });
+      sendStartCommand();
       startPlayback();
     } else if (playbackState === 'paused') {
       setPlaybackState('playing');
       onPlayStateChange?.(true);
-      bridge.sendCommand({
-        type: 'START_LIP_SYNC',
-        payload: { audioUrl, duration },
-      });
+      sendStartCommand();
       startPlayback();
     }
-  }, [playbackState, bridge, audioUrl, duration, startPlayback, onPlayStateChange]);
+  }, [playbackState, sendStartCommand, startPlayback, onPlayStateChange]);
 
   const handlePause = useCallback(() => {
     if (playbackState === 'playing') {
       clearTimer();
       setPlaybackState('paused');
       onPlayStateChange?.(false);
-      bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      if (useTTS) {
+        bridge.sendCommand({ type: 'STOP_TTS' });
+      } else {
+        bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      }
     }
-  }, [playbackState, clearTimer, bridge, onPlayStateChange]);
+  }, [playbackState, clearTimer, bridge, useTTS, onPlayStateChange]);
 
   const handleToggle = useCallback(() => {
     if (playbackState === 'playing') {
@@ -104,13 +138,31 @@ const AudioGuidePlayer: React.FC<AudioGuidePlayerProps> = ({
     }
   }, [playbackState, handlePlay, handlePause]);
 
-  // Cleanup on unmount: stop timer and lip sync
+  // TTS イベント監視: TTS_FINISHED で即座に完了
+  useEffect(() => {
+    if (!useTTS) return;
+    const event = bridge.lastEvent;
+    if (!event) return;
+
+    if (event.type === 'TTS_FINISHED' && playbackState === 'playing') {
+      handleComplete();
+    } else if (event.type === 'TTS_ERROR' && playbackState === 'playing') {
+      console.warn('[AudioGuidePlayer] TTS error:', (event as any).payload?.error);
+      handleComplete();
+    }
+  }, [bridge.lastEvent, useTTS, playbackState, handleComplete]);
+
+  // Cleanup on unmount: stop timer and TTS/lip sync
   useEffect(() => {
     return () => {
       clearTimer();
-      bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      if (useTTS) {
+        bridge.sendCommand({ type: 'STOP_TTS' });
+      } else {
+        bridge.sendCommand({ type: 'STOP_LIP_SYNC' });
+      }
     };
-  }, [clearTimer, bridge]);
+  }, [clearTimer, bridge, useTTS]);
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);

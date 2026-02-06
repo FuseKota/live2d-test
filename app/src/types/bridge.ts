@@ -10,7 +10,9 @@ export type WebViewCommand =
   | PlayMotionCommand
   | SetExpressionCommand
   | StartLipSyncCommand
-  | StopLipSyncCommand;
+  | StopLipSyncCommand
+  | StartTTSCommand
+  | StopTTSCommand;
 
 export interface SetModelCommand {
   type: 'SET_MODEL';
@@ -47,6 +49,18 @@ export interface StopLipSyncCommand {
   type: 'STOP_LIP_SYNC';
 }
 
+export interface StartTTSCommand {
+  type: 'START_TTS';
+  payload: {
+    text: string;
+    lang: string;
+  };
+}
+
+export interface StopTTSCommand {
+  type: 'STOP_TTS';
+}
+
 // === WebView → RN イベント ===
 
 export type WebViewEvent =
@@ -54,6 +68,9 @@ export type WebViewEvent =
   | ModelErrorEvent
   | MotionFinishedEvent
   | LipSyncFinishedEvent
+  | TTSStartedEvent
+  | TTSFinishedEvent
+  | TTSErrorEvent
   | ReadyEvent;
 
 export interface ModelLoadedEvent {
@@ -83,6 +100,24 @@ export interface MotionFinishedEvent {
 
 export interface LipSyncFinishedEvent {
   type: 'LIP_SYNC_FINISHED';
+}
+
+export interface TTSStartedEvent {
+  type: 'TTS_STARTED';
+  payload: {
+    estimatedDuration: number;
+  };
+}
+
+export interface TTSFinishedEvent {
+  type: 'TTS_FINISHED';
+}
+
+export interface TTSErrorEvent {
+  type: 'TTS_ERROR';
+  payload: {
+    error: string;
+  };
 }
 
 export interface ReadyEvent {
