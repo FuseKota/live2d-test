@@ -27,7 +27,7 @@ export const LAYOUT_CONFIG = {
 
   // アバターオーバーレイ位置（左下）
   AVATAR_OVERLAY_BOTTOM: 10,
-  AVATAR_OVERLAY_LEFT: 8,
+  AVATAR_OVERLAY_LEFT: -100,
 } as const;
 
 // 音声ガイド設定

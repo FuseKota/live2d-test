@@ -74,7 +74,7 @@ export default function App() {
         </View>
 
         {/* Live2D Avatar overlay (bottom-left) */}
-        <View style={styles.avatarContainer} pointerEvents="box-none">
+        <View style={styles.avatarContainer} pointerEvents="none">
           <Live2DAvatar
             onMessage={bridge.handleMessage}
             onEvent={handleEvent}
