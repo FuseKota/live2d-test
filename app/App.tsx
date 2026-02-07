@@ -2,8 +2,8 @@
  * App.tsx — ルートレイアウト
  *
  * 構成:
- * - 上部40%: Live2Dアバター（WebView、常時表示・ナビゲーションから独立）
- * - 下部60%: React Navigationコンテンツ
+ * - 全画面: React Navigationコンテンツ
+ * - 左下オーバーレイ: Live2Dアバター（WebView、常時表示・ナビゲーションから独立）
  * - Live2DBridgeContextでブリッジフックをアプリ全体に共有
  * - LanguageProviderで言語状態を管理
  */
@@ -60,19 +60,9 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeArea}>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
 
-        {/* Live2D Avatar area (top 40%) */}
-        <View style={styles.avatarContainer}>
-          <Live2DAvatar
-            onMessage={bridge.handleMessage}
-            onEvent={handleEvent}
-            onWebViewRef={handleWebViewRef}
-            connectionState={bridge.connectionState}
-          />
-        </View>
-
-        {/* Navigation content area (bottom 60%) */}
+        {/* Navigation content (full screen) */}
         <View style={styles.contentContainer}>
           <LanguageProvider>
             <Live2DBridgeProvider bridge={bridge}>
@@ -82,6 +72,16 @@ export default function App() {
             </Live2DBridgeProvider>
           </LanguageProvider>
         </View>
+
+        {/* Live2D Avatar overlay (bottom-left) */}
+        <View style={styles.avatarContainer} pointerEvents="box-none">
+          <Live2DAvatar
+            onMessage={bridge.handleMessage}
+            onEvent={handleEvent}
+            onWebViewRef={handleWebViewRef}
+            connectionState={bridge.connectionState}
+          />
+        </View>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -90,16 +90,16 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#000000',
-  },
-  avatarContainer: {
-    flex: LAYOUT_CONFIG.AVATAR_HEIGHT_RATIO,
+    backgroundColor: '#FFFFFF',
   },
   contentContainer: {
-    flex: LAYOUT_CONFIG.CONTENT_HEIGHT_RATIO,
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    overflow: 'hidden',
+    flex: 1,
+  },
+  avatarContainer: {
+    position: 'absolute',
+    bottom: LAYOUT_CONFIG.AVATAR_OVERLAY_BOTTOM,
+    left: LAYOUT_CONFIG.AVATAR_OVERLAY_LEFT,
+    width: LAYOUT_CONFIG.AVATAR_OVERLAY_WIDTH,
+    height: LAYOUT_CONFIG.AVATAR_OVERLAY_HEIGHT,
   },
 });

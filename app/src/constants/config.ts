@@ -21,11 +21,13 @@ export const LIVE2D_CONFIG = {
 
 // レイアウト設定
 export const LAYOUT_CONFIG = {
-  // アバター表示エリアの高さ比率
-  AVATAR_HEIGHT_RATIO: 0.4,
+  // アバターオーバーレイサイズ
+  AVATAR_OVERLAY_WIDTH: 440,
+  AVATAR_OVERLAY_HEIGHT: 600,
 
-  // コンテンツエリアの高さ比率
-  CONTENT_HEIGHT_RATIO: 0.6,
+  // アバターオーバーレイ位置（左下）
+  AVATAR_OVERLAY_BOTTOM: 10,
+  AVATAR_OVERLAY_LEFT: 8,
 } as const;
 
 // 音声ガイド設定

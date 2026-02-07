@@ -143,7 +143,7 @@ const Live2DAvatar = forwardRef<Live2DAvatarRef, Live2DAvatarProps>(
         {/* ローディング/エラーオーバーレイ */}
         {connectionState === 'loading' && (
           <View style={styles.overlay}>
-            <ActivityIndicator size="large" color="#FFFFFF" />
+            <ActivityIndicator size="small" color="#FFFFFF" />
             <Text style={styles.overlayText}>読み込み中...</Text>
           </View>
         )}
@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
   },
   overlayText: {
     color: '#FFFFFF',
-    fontSize: 14,
-    marginTop: 8,
+    fontSize: 10,
+    marginTop: 4,
   },
   overlayErrorIcon: {
     color: '#FF6B6B',
-    fontSize: 32,
+    fontSize: 20,
     fontWeight: '700',
   },
 });
